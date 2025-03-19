@@ -1,0 +1,1306 @@
+syntax = "v1"
+
+type Empty {}
+
+type Base {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+
+type (
+	RegisterReq {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	RegisterResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	LoginToken {
+		UserID uint   `json:"user_id"`
+		Token  string `json:"token"`
+	}
+	LoginReq {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	LoginResp {
+		Base
+		Data LoginToken `json:"data"`
+	}
+)
+
+type (
+	PersonalInfo {
+		UserID    uint   `json:"user_id"`
+		Username  string `json:"username"`
+		Email     string `json:"email"`
+		Avatar    string `json:"avatar"`
+		CreatedAt string `json:"created_at"`
+	}
+	GetPersonalInfoResp {
+		Base
+		Data PersonalInfo `json:"data"`
+	}
+)
+
+type (
+	PutPersonalInfoReq {
+		Username string `json:"username"`
+		Avatar   string `json:"avatar"`
+	}
+	PutPersonalInfoResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	SendCodeReq {
+		Email string `json:"email"`
+	}
+	SendCodeResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	VerifyEmailReq {
+		Email string `json:"email"`
+		Code  string `json:"code"`
+	}
+	VerifyEmailResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	FindPasswordReq {
+		Email       string `json:"email"`
+		Code        string `json:"code"`
+		NewPassword string `json:"new_password"`
+	}
+	FindPasswordResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	UpdatePasswordReq {
+		OldPassword string `json:"old_password"`
+		NewPassword string `json:"new_password"`
+	}
+	UpdatePasswordResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	CreateChatTopicReq {
+		Topic string `json:"topic"`
+	}
+	CreateChatTopicResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	UpdateChatTopicReq {
+		ID       int    `json:"id"`
+		NewTopic string `json:"new_topic"`
+	}
+	UpdateChatTopicResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	DeleteChatTopicReq {
+		ID int `form:"id"`
+	}
+	DeleteChatTopicResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	ChatList {
+		ID        uint   `json:"id"`
+		Title     string `json:"title"`
+		CreatedAt string `json:"created_at"`
+		UpdatedAt string `json:"updated_at"`
+	}
+	GetChatListResp {
+		Base
+		Data []ChatList `json:"data"`
+	}
+)
+
+type (
+	History {
+		ID        uint   `json:"id"`
+		Role      string `json:"role"`
+		Message   string `json:"message"`
+		CreatedAt string `json:"created_at"`
+		UpdatedAt string `json:"updated_at"`
+	}
+	ChatHistory {
+		SessionID    int       `json:"session_id"`
+		TotalPageNum float64   `json:"total_page_num"`
+		ChatHistory  []History `json:"chat_history"`
+	}
+	GetChatHistoryReq {
+		ID       uint `form:"id"`
+		PageNum  int  `form:"page_num"`
+		PageSize int  `form:"page_size"`
+	}
+	GetChatHistoryResp {
+		Base
+		Data ChatHistory `json:"data"`
+	}
+)
+
+type (
+	ChatAnswer {
+		Message string `json:"message"`
+	}
+	GetChatAnswerReq {
+		SessionID int    `json:"session_id"`
+		Message   string `json:"message"`
+	}
+	GetChatAnswerResp {
+		Base
+		Data ChatAnswer `json:"data"`
+	}
+)
+
+type (
+	SyncIndexByHandReq {
+		IndexType int `json:"index_type"`
+	}
+	SyncIndexByHandResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	Message {
+		Role      string `json:"role"`
+		Message   string `json:"message"`
+		CreatedAt string `json:"created_at"`
+		UpdatedAt string `json:"updated_at"`
+	}
+	Chat {
+		Title     string    `json:"title"`
+		CreatedAt string    `json:"created_at"`
+		UpdatedAt string    `json:"updated_at"`
+		Messages  []Message `json:"chat_history"`
+	}
+	SearchMessagesReq {
+		Key string `form:"key"`
+	}
+	SearchMessagesResp {
+		Base
+		Data []Chat `json:"data"`
+	}
+)
+
+type (
+	FileUrl {
+		Url string `json:"url"`
+	}
+	UploadFileReq {
+		Type int `form:"type"`
+	}
+	UploadFileResp {
+		Base
+		Data FileUrl `json:"data"`
+	}
+)
+
+type (
+	DiskDirectory {
+		ID        uint   `json:"id"`
+		Name      string `json:"name"`
+		Path      string `json:"path"`
+		Size      string `json:"size"`
+		FileType  string `json:"file_type"`
+		FileUrl   string `json:"file_url"`
+		IsDir     bool   `json:"is_dir"`
+		UpdatedAt string `json:"updated_at"`
+		IsCollect bool   `json:"is_collect"`
+	}
+	DiskDirectoryList {
+		FileList []DiskDirectory `json:"file_list"`
+		TotalNum int64           `json:"total_num"`
+	}
+	GetDiskDirectoryReq {
+		ParentID int `form:"parent_id"`
+		PageNum  int `form:"page_num"`
+		PageSize int `form:"page_size"`
+	}
+	GetDiskDirectoryResp {
+		Base
+		Data DiskDirectoryList `json:"data"`
+	}
+)
+
+type (
+	DirectoryInfo {
+		ID        uint   `json:"id"`
+		Name      string `json:"name"`
+		FileType  string `json:"file_type"`
+		UpdatedAt string `json:"updated_at"`
+		IsCollect bool   `json:"is_collect"`
+	}
+	CreateDiskDirectoryReq {
+		Name     string `json:"name"`
+		Path     string `json:"path"`
+		ParentID int    `json:"parent_id"`
+	}
+	CreateDiskDirectoryResp {
+		Base
+		Data DirectoryInfo `json:"data"`
+	}
+)
+
+type (
+	PutDiskDirectoryReq {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	}
+	PutDiskDirectoryResq {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	FileInfo {
+		ID             string `json:"id"`
+		Name           string `json:"name"`
+		Size           string `json:"size"`
+		FileCount      int    `json:"file_count"`
+		DirectoryCount int    `json:"directory_count"`
+		Path           string `json:"path"`
+		FileType       string `json:"file_type"`
+		UpdatedAt      string `json:"updated_at"`
+		FileUrl        string `json:"file_url"`
+		IsCollect      bool   `json:"is_collect"`
+	}
+	UploadDiskFileReq {
+		ParentID int    `form:"parent_id"`
+		Path     string `form:"path"`
+	}
+	UploadDiskFileResp {
+		Base
+		Data FileInfo `json:"data"`
+	}
+)
+
+type (
+	GetDiskFileInfoReq {
+		ID int `form:"id"`
+	}
+	GetDiskFileInfoResp {
+		Base
+		Data FileInfo `json:"data"`
+	}
+)
+
+type (
+	DeleteDiskFileReq {
+		Ids []int `json:"ids"`
+	}
+	DeleteDiskFileResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	RecycleDiskFile {
+		ID        int    `json:"id"`
+		Name      string `json:"name"`
+		Size      string `json:"size"`
+		DeletedAt string `json:"deleted_at"`
+	}
+	GetRecycleDiskFileResp {
+		Base
+		Data []RecycleDiskFile `json:"data"`
+	}
+)
+
+type (
+	RecoverDiskFileReq {
+		Ids []int `json:"ids"`
+	}
+	RecoverDiskFileResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	CompleteDelDiskFileReq {
+		Ids []int `json:"ids"`
+	}
+	CompleteDelDiskFileResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	Link {
+		Code string `json:"code"`
+		Url  string `json:"url"`
+	}
+	ShareLinkGenReq {
+		Ids      []int  `json:"ids"`
+		Validity int    `json:"validity"`
+		Code     string `json:"code"`
+	}
+	ShareLinkGenResp {
+		Base
+		Data Link `json:"data"`
+	}
+)
+
+type (
+	GetShareLinkReq {
+		Link string `form:"link"`
+		Code string `form:"code"`
+	}
+	GetShareLinkResp {
+		Base
+		Data []DiskDirectory `json:"data"`
+	}
+)
+
+type (
+	GetShareDirectoryReq {
+		ParentID int `form:"parent_id"`
+		PageNum  int `form:"page_num"`
+		PageSize int `form:"page_size"`
+	}
+	GetShareDirectoryResp {
+		Base
+		Data DiskDirectoryList `json:"data"`
+	}
+)
+
+type (
+	StoreResourceReq {
+		Ids      []int  `json:"ids"`
+		ParentID int    `json:"parent_id"`
+		Path     string `json:"path"`
+	}
+	StoreResourceResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	CollectFileReq {
+		Ids []int `json:"ids"`
+	}
+	CollectFileResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	GetCollectFileReq {
+		PageNum  int `form:"page_num"`
+		PageSize int `form:"page_size"`
+	}
+	GetCollectFileResp {
+		Base
+		Data DiskDirectoryList `json:"data"`
+	}
+)
+
+type (
+	MoveFileReq {
+		Ids      []int `json:"ids"`
+		ParentID int   `json:"parent_id"`
+	}
+	MoveFileResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	SearchFilesReq {
+		Key string `form:"key"`
+	}
+	SearchFilesResp {
+		Base
+		Data []DiskDirectory `json:"data"`
+	}
+)
+
+type (
+	GetFilesByTypeReq {
+		FileType int `form:"file_type"`
+		PageNum  int `form:"page_num"`
+		PageSize int `form:"page_size"`
+	}
+	GetFilesByTypeResp {
+		Base
+		Data DiskDirectoryList `json:"data"`
+	}
+)
+
+type (
+	MinioObjectPart {
+		PartNumber int    `json:"part_number"`
+		ETag       string `json:"e_tag"`
+	}
+	FileMD5 {
+		Status     int               `json:"status"`
+		UploadID   string            `json:"upload_id"`
+		ObjectPart []MinioObjectPart `json:"object_part"`
+	}
+	CheckFileMD5Req {
+		MD5      string `form:"md5"`
+		FileName string `form:"file_name"`
+	}
+	CheckFileMD5Resp {
+		Base
+		Data FileMD5 `json:"data"`
+	}
+)
+
+type (
+	UploadCert {
+		UploadID string `json:"upload_id"`
+	}
+	GetUploadCertReq {
+		FileName    string `form:"file_name"`
+		MD5         string `form:"md5"`
+		ContentType string `form:"content_type"`
+	}
+	GetUploadCertResp {
+		Base
+		Data UploadCert `json:"data"`
+	}
+)
+
+type (
+	MergeFileReq {
+		FileName    string `json:"file_name"`
+		MD5         string `json:"md5"`
+		UploadID    string `json:"upload_id"`
+		ContentType string `json:"content_type"`
+		ParentID    int    `json:"parent_id"`
+		Path        string `json:"path"`
+	}
+	MergeFileResp {
+		Base
+		Data FileInfo `json:"data"`
+	}
+)
+
+type (
+	CreateCourseReq {
+		CourseNumber       string   `json:"course_number"`
+		CourseName         string   `json:"course_name"`
+		CourseImg          string   `json:"course_img"`
+		CourseIntroduction string   `json:"course_introduction"`
+		CourseClass        string   `json:"course_class"`
+		CourseType         int      `json:"course_type"`
+		CourseAddr         string   `json:"course_addr"`
+		LecturerProfile    string   `json:"lecturer_profile"`
+		Credit             string   `json:"credit"`
+		AcademicYear       string   `json:"academic_year"`
+		AcademicTerm       int      `json:"academic_term"`
+		Week               string   `json:"week"`
+		Weekday            string   `json:"weekday"`
+		Section            string   `json:"section"`
+		Classes            []string `json:"classes"`
+	}
+	CreateCourseResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	UpdateCourseReq {
+		ID                 int    `json:"id"`
+		CourseNumber       string `json:"course_number"`
+		CourseName         string `json:"course_name"`
+		CourseImg          string `json:"course_img"`
+		CourseIntroduction string `json:"course_introduction"`
+		CourseClass        string `json:"course_class"`
+		CourseType         int    `json:"course_type"`
+		CourseAddr         string `json:"course_addr"`
+		LecturerProfile    string `json:"lecturer_profile"`
+		Credit             string `json:"credit"`
+		AcademicYear       string `json:"academic_year"`
+		AcademicTerm       int    `json:"academic_term"`
+		Week               string `json:"week"`
+		Weekday            string `json:"weekday"`
+		Section            string `json:"section"`
+		IsCompleted        bool   `json:"is_completed"`
+	}
+	UpdateCourseResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	Course {
+		ID                 int      `json:"id"`
+		CourseNumber       string   `json:"course_number"`
+		CourseName         string   `json:"course_name"`
+		CourseImg          string   `json:"course_img"`
+		CourseIntroduction string   `json:"course_introduction"`
+		CourseClass        string   `json:"course_class"`
+		CourseType         int      `json:"course_type"`
+		CourseAddr         string   `json:"course_addr"`
+		LecturerProfile    string   `json:"lecturer_profile"`
+		Credit             string   `json:"credit"`
+		AcademicYear       string   `json:"academic_year"`
+		AcademicTerm       int      `json:"academic_term"`
+		Week               string   `json:"week"`
+		Weekday            string   `json:"weekday"`
+		Section            string   `json:"section"`
+		IsCompleted        bool     `json:"is_completed"`
+		Classes            []string `json:"classes"`
+	}
+	GetCourseListResp {
+		Base
+		Data []Course `json:"data"`
+	}
+)
+
+type (
+	ImportScoresReq {
+		CourseID int `form:"course_id"`
+	}
+	ImportScoresResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	ExportScoresReq {
+		CourseID int `form:"course_id"`
+	}
+	ExportScoresResp {
+		Base
+		Data FileUrl `json:"data"`
+	}
+)
+
+type (
+	StudentScore {
+		StudentID    string  `json:"student_id"`
+		Name         string  `json:"name"`
+		Class        string  `json:"class"`
+		Major        string  `json:"major"`
+		College      string  `json:"college"`
+		RegularScore float64 `json:"regular_score"`
+		FinalScore   float64 `json:"final_score"`
+		TotalScore   float64 `json:"total_score"`
+		CreditEarned bool    `json:"credit_earned"`
+		GradePoint   float64 `json:"grade_point"`
+	}
+	GetStudentScoreReq {
+		CourseID int    `form:"course_id"`
+		Class    string `form:"class"`
+	}
+	GetStudentScoreResp {
+		Base
+		Data []StudentScore `json:"data"`
+	}
+)
+
+type (
+	UpdateStudentScore {
+		StudentID    string `json:"student_id"`
+		Name         string `json:"name"`
+		Class        string `json:"class"`
+		Major        string `json:"major"`
+		College      string `json:"college"`
+		RegularScore string `json:"regular_score"`
+		FinalScore   string `json:"final_score"`
+		TotalScore   string `json:"total_score"`
+	}
+	UpdateStudentScoreReq {
+		CourseID     int                  `json:"course_id"`
+		UpdateScores []UpdateStudentScore `json:"update_scores"`
+	}
+	UpdateStudentScoreResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	DeleteStudentScoreReq {
+		StudentIDs []string `json:"student_ids"`
+		CourseID   int      `json:"course_id"`
+	}
+	DeleteStudentScoreResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	CreateStudentScore {
+		StudentID    string `json:"student_id"`
+		RegularScore string `json:"regular_score"`
+		FinalScore   string `json:"final_score"`
+		TotalScore   string `json:"total_score"`
+	}
+	CreateStudentScoreReq {
+		CourseID     int                  `json:"course_id"`
+		CreateScores []CreateStudentScore `json:"create_scores"`
+	}
+	CreateStudentScoreResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	DeleteCourseReq {
+		CourseID int `form:"course_id"`
+	}
+	DeleteCourseResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	CourseAvgScore {
+		CourseID   uint    `json:"course_id"`
+		CourseName string  `json:"course_name"`
+		AvgScore   float64 `json:"avg_score"`
+	}
+	ClassPerformance {
+		ClassAvgGradePoint float64          `json:"class_avg_grade_point"`
+		CourseAvgScores    []CourseAvgScore `json:"course_avg_scores"`
+	}
+	GetClassPerformanceReq {
+		Class string `form:"class"`
+		Year  string `form:"year"`
+		Term  int    `form:"term"`
+	}
+	GetClassPerformanceResp {
+		Base
+		Data ClassPerformance `json:"class_performance"`
+	}
+)
+
+type (
+	CountPerformanceNumber {
+		ExcellentCount int `json:"excellent_count"`
+		GoodCount      int `json:"good_count"`
+		PassCount      int `json:"pass_count"`
+		FailCount      int `json:"fail_count"`
+	}
+	GetCountPerformanceNumberReq {
+		Class      string `form:"class"`
+		Year       string `form:"year"`
+		Term       int    `form:"term"`
+		CourseName string `form:"course_name"`
+	}
+	GetCountPerformanceNumberResp {
+		Base
+		Data CountPerformanceNumber `json:"count_number"`
+	}
+)
+
+type (
+	ClassList {
+		ClassList []string `json:"class_list"`
+	}
+	GetClassListResp {
+		Base
+		Data ClassList `json:"data"`
+	}
+)
+
+type (
+	Student {
+		StudentID string `json:"student_id"`
+		Name      string `json:"name"`
+		Class     string `json:"class"`
+		Major     string `json:"major"`
+	}
+	GetStudentListReq {
+		Class string `form:"class"`
+	}
+	GetStudentListResp {
+		Base
+		Data []Student `json:"data"`
+	}
+)
+
+type (
+	TermGPA {
+		AcademicYear string  `json:"academic_year"`
+		AcademicTerm int     `json:"academic_term"`
+		AvgGPA       float64 `json:"avg_gpa"`
+		Rank         int     `json:"rank"`
+		Percentile   float64 `json:"percentile"`
+	}
+	GetStudentTermGPAReq {
+		StudentID string `form:"student_id"`
+	}
+	GetStudentTermGPAResp {
+		Base
+		Data []TermGPA `json:"data"`
+	}
+)
+
+type (
+	StudentScores {
+		StudentID    string  `json:"student_id"`
+		Name         string  `json:"name"`
+		Class        string  `json:"class"`
+		Major        string  `json:"major"`
+		College      string  `json:"college"`
+		CourseID     int     `json:"course_id"`
+		CourseName   string  `json:"course_name"`
+		RegularScore float64 `json:"regular_score"`
+		FinalScore   float64 `json:"final_score"`
+		TotalScore   float64 `json:"total_score"`
+		Credit       string  `json:"credit"`
+		CreditEarned bool    `json:"credit_earned"`
+		GradePoint   float64 `json:"grade_point"`
+		AcademicYear string  `json:"academic_year"`
+		AcademicTerm int     `json:"academic_term"`
+	}
+	GetStudentScoresReq {
+		StudentID string `form:"student_id"`
+	}
+	GetStudentScoresResp {
+		Base
+		Data []StudentScores `json:"data"`
+	}
+)
+
+type (
+	ChapterScoreWithAvg {
+		Chapter      int     `json:"chapter"`
+		StudentScore float64 `json:"student_score"`
+		AvgScore     float64 `json:"avg_score"`
+	}
+	GetStudentChapterScoreReq {
+		StudentID string `form:"student_id"`
+		CourseID  int    `form:"course_id"`
+	}
+	GetStudentChapterScoreResp {
+		Base
+		Data []ChapterScoreWithAvg `json:"data"`
+	}
+)
+
+type (
+	GetClassListByCourseReq {
+		CourseID int `form:"course_id"`
+	}
+	GetClassListByCourseResp {
+		Base
+		Data ClassList `json:"data"`
+	}
+)
+
+type (
+	CreateStudentInfoReq {
+		CourseID  int    `json:"course_id"`
+		StudentID string `json:"student_id"`
+		Name      string `json:"name"`
+		College   string `json:"college"`
+		Class     string `json:"class"`
+		Major     string `json:"major"`
+	}
+	CreateStudentInfoResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	UpdateStudentInfoReq {
+		StudentID string `json:"student_id"`
+		Name      string `json:"name"`
+		College   string `json:"college"`
+		Class     string `json:"class"`
+		Major     string `json:"major"`
+	}
+	UpdateStudentInfoResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	StudentInfo {
+		StudentID string `json:"student_id"`
+		Name      string `json:"name"`
+		College   string `json:"college"`
+		Class     string `json:"class"`
+		Major     string `json:"major"`
+	}
+	GetStudentInfoReq {
+		CourseID int    `form:"course_id"`
+		Class    string `form:"class"`
+	}
+	GetStudentInfoResp {
+		Base
+		Data []StudentInfo `json:"data"`
+	}
+)
+
+type (
+	DelStudentInfoReq {
+		StudentIDs []string `json:"student_ids"`
+	}
+	DelStudentInfoResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	CourseTable {
+		CourseName  string `json:"course_name"`
+		CourseClass string `json:"course_class"`
+		CourseType  int    `json:"course_type"`
+		CourseAddr  string `json:"course_addr"`
+		Credit      string `json:"credit"`
+		Week        string `json:"week"`
+		Weekday     string `json:"weekday"`
+		Section     string `json:"section"`
+	}
+	GetCourseTableReq {
+		AcademicYear string `form:"academic_year"`
+		AcademicTerm int    `form:"academic_term"`
+		Week         int    `form:"week"`
+	}
+	GetCourseTableResp {
+		Base
+		Data []CourseTable `json:"data"`
+	}
+)
+
+type (
+	GetMaterialGraphReq {
+		Filename        string `form:"filename"`
+		AuthorizationID string `form:"authorization_id"`
+	}
+	GetMaterialGraphResp {
+		Base
+		Data interface{} `json:"data"`
+	}
+)
+
+type (
+	UpdateGraphNodeReq {
+		UpdateInformation map[string]interface{} `json:"update_information"`
+		NodeType          string                 `json:"node_type"`
+		ElementID         string                 `json:"element_id"`
+		AuthorizationID   string                 `json:"authorization_id"`
+	}
+	UpdateGraphNodeResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	DeleteGraphNodeReq {
+		ElementID       string `form:"element_id"`
+		NodeType        string `form:"node_type"`
+		Filename        string `form:"filename"`
+		AuthorizationID string `form:"authorization_id"`
+	}
+	DeleteGraphNodeResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	GetMaterialGraphListReq {
+		AuthorizationID string `form:"authorization_id"`
+		GraphType       int    `form:"graph_type"`
+	}
+	GetMaterialGraphListResp {
+		Base
+		Data interface{} `json:"data"`
+	}
+)
+
+type (
+	NodeElementID {
+		ElementID string `json:"element_id"`
+	}
+	CreateGraphNodeReq {
+		CreateInformation map[string]interface{} `json:"create_information"`
+		NodeType          string                 `json:"node_type"`
+		AuthorizationID   string                 `json:"authorization_id"`
+	}
+	CreateGraphNodeResp {
+		Base
+		Data NodeElementID `json:"data"`
+	}
+)
+
+type (
+	CreateGraphNodeRelationShipReq {
+		StartNodeElementID string `json:"start node element id"`
+		EndNodeElementID   string `json:"end node element id"`
+		RelationshipType   string `json:"relationship_type"`
+		Filename           string `json:"filename"`
+	}
+	CreateGraphNodeRelationShipResp {
+		Base
+		Data NodeElementID `json:"data"`
+	}
+)
+
+type (
+	UpdateGraphNodeRelationShipReq {
+		ElementID        string `json:"element_id"`
+		RelationshipType string `json:"relationship_type"`
+		Filename         string `json:"filename"`
+	}
+	UpdateGraphNodeRelationShipResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	DeleteGraphNodeRelationShipReq {
+		ElementID string `form:"element_id"`
+		Filename  string `form:"filename"`
+	}
+	DeleteGraphNodeRelationShipResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+@server (
+	group: app
+)
+service app {
+	@handler Ping
+	get /ping (Empty) returns (Base)
+}
+
+@server (
+	group:  user
+	prefix: /api/user
+)
+service app {
+	@handler Register
+	post /reg (RegisterReq) returns (RegisterResp)
+
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+
+	@handler FindPassword
+	put /findpwd (FindPasswordReq) returns (FindPasswordResp)
+
+	@handler UploadFile
+	post /upload (UploadFileReq) returns (UploadFileResp)
+}
+
+@server (
+	group:  email
+	prefix: /api/email
+)
+service app {
+	@handler SendCode
+	post /code (SendCodeReq) returns (SendCodeResp)
+
+	@handler VerifyEmail
+	post /verify (VerifyEmailReq) returns (VerifyEmailResp)
+}
+
+@server (
+	group:  user
+	prefix: /api/user
+	jwt:    Auth
+)
+service app {
+	@handler GetPersonalInfo
+	get /personal (Empty) returns (GetPersonalInfoResp)
+
+	@handler PutPersonalInfo
+	put /personal (PutPersonalInfoReq) returns (PutPersonalInfoResp)
+
+	@handler UpdatePassword
+	put /pwd (UpdatePasswordReq) returns (UpdatePasswordResp)
+}
+
+@server (
+	group:  chat
+	prefix: /api/chat
+	jwt:    Auth
+)
+service app {
+	@handler CreateChatTopic
+	post /topic (CreateChatTopicReq) returns (CreateChatTopicResp)
+
+	@handler UpdateChatTopic
+	put /topic (UpdateChatTopicReq) returns (UpdateChatTopicResp)
+
+	@handler DeleteChatTopic
+	delete /topic (DeleteChatTopicReq) returns (DeleteChatTopicResp)
+
+	@handler GetChatList
+	get /topic (Empty) returns (GetChatListResp)
+
+	@handler GetChatHistory
+	get /history (GetChatHistoryReq) returns (GetChatHistoryResp)
+
+	@handler GetChatAnswer
+	post /answer (GetChatAnswerReq) returns (GetChatAnswerResp)
+
+	@handler SearchMessages
+	get /search (SearchMessagesReq) returns (SearchMessagesResp)
+
+	@handler WsConnect
+	post /ws/connect
+}
+
+@server (
+	group:  disk
+	prefix: /api/disk
+	jwt:    Auth
+)
+service app {
+	@handler GetDiskDirectory
+	get /directory (GetDiskDirectoryReq) returns (GetDiskDirectoryResp)
+
+	@handler CreateDiskDirectory
+	post /directory (CreateDiskDirectoryReq) returns (CreateDiskDirectoryResp)
+
+	@handler PutDiskDirectory
+	put /directory (PutDiskDirectoryReq) returns (PutDiskDirectoryResq)
+
+	@handler UploadDiskFile
+	post /file (UploadDiskFileReq) returns (UploadDiskFileResp)
+
+	@handler GetFileInfo
+	get /file (GetDiskFileInfoReq) returns (GetDiskFileInfoResp)
+
+	@handler DeleteDiskFile
+	delete /directory (DeleteDiskFileReq) returns (DeleteDiskFileResp)
+
+	@handler GetRecycleDiskFile
+	get /recycle (Empty) returns (GetRecycleDiskFileResp)
+
+	@handler RecoverDiskFile
+	put /recycle (RecoverDiskFileReq) returns (RecoverDiskFileResp)
+
+	@handler CompleteDelDiskFile
+	delete /recycle (CompleteDelDiskFileReq) returns (CompleteDelDiskFileResp)
+
+	@handler ShareLink
+	post /share (ShareLinkGenReq) returns (ShareLinkGenResp)
+
+	@handler GetShareLink
+	get /share (GetShareLinkReq) returns (GetShareLinkResp)
+
+	@handler GetShareDirectory
+	get /shareDir (StoreResourceReq) returns (GetShareDirectoryResp)
+
+	@handler StoreResource
+	post /store (StoreResourceReq) returns (StoreResourceResp)
+
+	@handler CollectFile
+	post /collect (CollectFileReq) returns (CollectFileResp)
+
+	@handler GetCollectFile
+	get /collect (GetCollectFileReq) returns (GetCollectFileResp)
+
+	@handler MoveFile
+	post /move (MoveFileReq) returns (MoveFileResp)
+
+	@handler SearchFile
+	get /find (SearchFilesReq) returns (SearchFilesResp)
+
+	@handler GetFilesByType
+	get /fileType (GetFilesByTypeReq) returns (GetFilesByTypeResp)
+
+	@handler CheckFileMD5
+	get /check (CheckFileMD5Req) returns (CheckFileMD5Resp)
+
+	@handler GetUploadCert
+	get /cert (GetUploadCertReq) returns (GetUploadCertResp)
+
+	@handler MergeFile
+	post /merge (MergeFileReq) returns (MergeFileResp)
+}
+
+@server (
+	group:  es
+	prefix: /api/es
+)
+service app {
+	@handler SyncIndexByHand
+	post /index (SyncIndexByHandReq) returns (SyncIndexByHandResp)
+}
+
+@server (
+	group:  course
+	prefix: /api/course
+	jwt:    Auth
+)
+service app {
+	@handler CreateCourse
+	post /create (CreateCourseReq) returns (CreateCourseResp)
+
+	@handler UpdateCourse
+	put /put (UpdateCourseReq) returns (UpdateCourseResp)
+
+	@handler GetCourseList
+	get /get (Empty) returns (GetCourseListResp)
+
+	@handler DeleteCourse
+	delete /del (DeleteCourseReq) returns (DeleteCourseResp)
+
+	@handler GetClassListByCourse
+	get /classList (GetClassListByCourseReq) returns (GetClassListByCourseResp)
+
+	@handler GetCourseTable
+	get /table (GetCourseTableReq) returns (GetCourseTableResp)
+}
+
+@server (
+	group:  score
+	prefix: /api/score
+	jwt:    Auth
+)
+service app {
+	@handler ImportScores
+	post /import (ImportScoresReq) returns (ImportScoresResp)
+
+	@handler GetStudentScore
+	get /student (GetStudentScoreReq) returns (GetStudentScoreResp)
+
+	@handler ExportScores
+	get /export (ExportScoresReq) returns (ExportScoresResp)
+
+	@handler UpdateScores
+	put /update (UpdateStudentScoreReq) returns (UpdateStudentScoreResp)
+
+	@handler DeleteScores
+	delete /delete (DeleteStudentScoreReq) returns (DeleteStudentScoreResp)
+
+	@handler CreateScores
+	post /add (CreateStudentScoreReq) returns (CreateStudentScoreResp)
+
+	@handler GetClassPerformance
+	get /perf (GetClassPerformanceReq) returns (GetClassPerformanceResp)
+
+	@handler GetCountNumber
+	get /number (GetCountPerformanceNumberReq) returns (GetCountPerformanceNumberResp)
+}
+
+@server (
+	group:  class
+	prefix: /api/class
+	jwt:    Auth
+)
+service app {
+	@handler GetClassList
+	get /list (Empty) returns (GetClassListResp)
+
+	@handler GetAllClassList
+	get /allList (Empty) returns (GetClassListResp)
+
+	@handler GetStudentList
+	get /stu (GetStudentListReq) returns (GetStudentListResp)
+
+	@handler GetStudentGPA
+	get /gpa (GetStudentTermGPAReq) returns (GetStudentTermGPAResp)
+
+	@handler GetStudentScores
+	get /score (GetStudentScoresReq) returns (GetStudentScoresResp)
+
+	@handler GetStudentChapterScore
+	get /chapter (GetStudentChapterScoreReq) returns (GetStudentChapterScoreResp)
+}
+
+@server (
+	group:  student
+	prefix: /api/student
+	jwt:    Auth
+)
+service app {
+	@handler CreateStudentInfo
+	post /info (CreateStudentInfoReq) returns (CreateStudentInfoResp)
+
+	@handler UpdateStudentInfo
+	put /info (UpdateStudentInfoReq) returns (UpdateStudentInfoResp)
+
+	@handler GetStudentInfo
+	get /info (GetStudentInfoReq) returns (GetStudentInfoResp)
+
+	@handler DelStudentInfo
+	delete /info (DelStudentInfoReq) returns (DelStudentInfoResp)
+}
+
+@server (
+	group:  graph
+	prefix: /api/graph
+	jwt:    Auth
+)
+service app {
+	@handler GetMaterialGraph
+	get /material (GetMaterialGraphReq) returns (GetMaterialGraphResp)
+
+	@handler UpdateGraphNode
+	put /material (UpdateGraphNodeReq) returns (UpdateGraphNodeResp)
+
+	@handler DeleteGraphNode
+	delete /material (DeleteGraphNodeReq) returns (DeleteGraphNodeResp)
+
+	@handler GetMaterialGraphList
+	get /material_list (GetMaterialGraphListReq) returns (GetMaterialGraphListResp)
+
+	@handler CreateGraphNode
+	post /material (CreateGraphNodeReq) returns (CreateGraphNodeResp)
+
+	@handler CreateGraphNodeRelationShip
+	post /relationship (CreateGraphNodeRelationShipReq) returns (CreateGraphNodeRelationShipResp)
+
+	@handler UpdateGraphNodeRelationShip
+	put /relationship (UpdateGraphNodeRelationShipReq) returns (UpdateGraphNodeRelationShipResp)
+
+	@handler DeleteGraphNodeRelationShip
+	delete /relationship (DeleteGraphNodeRelationShipReq) returns (DeleteGraphNodeRelationShipResp)
+}
+

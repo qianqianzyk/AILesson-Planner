@@ -1,0 +1,68 @@
+Host: "127.0.0.1"
+Port: 8888
+
+RestConf:
+  Name: "AILesson-Planner"
+  Version: "v1"
+  Host: "127.0.0.1"
+  Port: 8888
+  MaxBytes: 52428800
+  Timeout: 50000
+
+Auth:
+  AccessSecret:
+  AccessExpire: 1209600 # 14天
+
+Aes:
+  Key: "1111111111111111"
+
+Email:
+  Name: ""
+  Key: ""
+
+Tongyi:
+  Endpoint: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
+  APIKey: ""
+
+ES:
+  Host: "http://localhost:9200"
+  Username: "elastic"
+  Password: ""
+  Index: "conversation_messages"
+  DisableRetry: false
+  MaxRetries: 3
+
+
+MySQL:
+  DSN: ""
+
+Redis:
+  Host: "127.0.0.1:6379"
+  Password: ""
+  Type: "node"
+  Tls: false
+
+MinIO:
+  AccessKey:
+  SecretKey:
+  Secure: False
+  Endpoint: 127.0.0.1:9000
+  Bucket: aihelper
+  Domain: http://127.0.0.1:9000/
+  TempDir: tmp
+
+Log:
+  DisableStacktrace: false      # 是否禁用堆栈跟踪
+  Level: "info"                 # 日志级别 debug: 调试 info: 信息 warn: 警告 error: 错误 panic: 严重 panic: 恐慌 fatal: 致命
+  Name: "AILesson-Planner-Log"  # 日志名称
+  Writer: "all"                 # 日志输出方式（console, file 或 all）
+  LoggerDir: "./logs"           # 日志目录
+  LogMaxSize: 10                # 单个日志文件最大大小 单位: MB
+  LogMaxAge: 7                  # 日志保留天数
+  LogCompress: false            # 是否压缩日志文件
+
+Neo4j:
+  Url: neo4j+s://
+  Username: neo4j
+  Password:
+  AuraInstanceID:
