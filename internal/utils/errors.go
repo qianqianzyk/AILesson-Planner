@@ -85,6 +85,9 @@ var (
 	ErrCreateGraphNodeRelationship = NewError(200576, logs.LevelInfo, "新增知识图谱节点关系失败，请重试")
 	ErrUpdateGraphNodeRelationship = NewError(200577, logs.LevelInfo, "更新知识图谱节点关系失败，请重试")
 	ErrDeleteGraphNodeRelationship = NewError(200578, logs.LevelInfo, "删除知识图谱节点关系失败，请重试")
+	ErrCreateExperiencePost        = NewError(200579, logs.LevelInfo, "创建经验帖失败，请重试")
+	ErrDeleteExperiencePost        = NewError(200580, logs.LevelInfo, "删除经验帖失败，请重试")
+	ErrGetExperiencePost           = NewError(200581, logs.LevelInfo, "获取经验贴失败，请重试")
 
 	ErrTimeLimited = errors.New("请等待60秒后再尝试发送邮件")
 )

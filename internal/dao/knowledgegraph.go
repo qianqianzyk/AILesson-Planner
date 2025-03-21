@@ -211,14 +211,13 @@ func formatTime(value interface{}) string {
 	}
 }
 
-func (d *Dao) UpdateNodeByElementID(ctx context.Context, nodeType, elementID, authorizationID string, updates map[string]interface{}) error {
+func (d *Dao) UpdateNodeByElementID(ctx context.Context, nodeType, elementID string, updates map[string]interface{}) error {
 	session := (*d.ne).NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer session.Close(ctx)
 
 	setClauses := ""
 	params := map[string]interface{}{
-		"elementID":       elementID,
-		"authorizationID": authorizationID,
+		"elementID": elementID,
 	}
 
 	i := 0
@@ -247,7 +246,7 @@ func (d *Dao) UpdateNodeByElementID(ctx context.Context, nodeType, elementID, au
 
 	query := fmt.Sprintf(`
 		MATCH (n:%s) 
-		WHERE elementId(n) = $elementID AND d.authorization_id = $authorizationID
+		WHERE elementId(n) = $elementID
 		SET %s
 		RETURN elementId(n) AS updatedElementId
 	`, nodeType, setClauses)
@@ -422,6 +421,8 @@ func (d *Dao) GetDocumentList(ctx context.Context, authorizationID string, graph
 	}
 	if graphType == 2 {
 		query += ` AND d.model = "手动创建"`
+	} else if graphType == 1 {
+		query += ` AND d.model <> "手动创建"`
 	}
 	query += `
 		RETURN

@@ -15,6 +15,7 @@ import (
 	es "github.com/qianqianzyk/AILesson-Planner/internal/handler/es"
 	graph "github.com/qianqianzyk/AILesson-Planner/internal/handler/graph"
 	score "github.com/qianqianzyk/AILesson-Planner/internal/handler/score"
+	share "github.com/qianqianzyk/AILesson-Planner/internal/handler/share"
 	student "github.com/qianqianzyk/AILesson-Planner/internal/handler/student"
 	user "github.com/qianqianzyk/AILesson-Planner/internal/handler/user"
 	"github.com/qianqianzyk/AILesson-Planner/internal/svc"
@@ -385,6 +386,48 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/api/score"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/resource",
+				Handler: share.CreateShareResourceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/resource",
+				Handler: share.DeleteShareResourceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/resource",
+				Handler: share.GetShareResourceListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/search_resource",
+				Handler: share.SearchShareResourceHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/share_file",
+				Handler: share.UploadShareFileHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/share_file",
+				Handler: share.DeleteShareFileHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/share_resource",
+				Handler: share.StoreShareResourceHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/share"),
 	)
 
 	server.AddRoutes(

@@ -31,7 +31,7 @@ func (l *DeleteGraphNodeRelationShipLogic) DeleteGraphNodeRelationShip(req *type
 
 	err = service.DeleteGraphNodeRelationShip(elementID, filename)
 	if err != nil {
-		return nil, utils.AbortWithException(utils.ErrDeleteGraphNode, err)
+		return nil, utils.AbortWithException(utils.ErrDeleteGraphNodeRelationship, err)
 	}
 
 	return &types.DeleteGraphNodeRelationShipResp{

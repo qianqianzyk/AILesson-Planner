@@ -16,3 +16,13 @@ func UpdateAttachment(attachment *model.Attachment) error {
 	err := d.UpdateAttachment(ctx, attachment)
 	return err
 }
+
+func DeleteAttachmentByUrl(userID int, fileUrl string) error {
+	err := d.DeleteAttachmentByUrl(ctx, userID, fileUrl)
+	return err
+}
+
+func GetAttachmentByUrl(fileUrl string) (*model.Attachment, error) {
+	attachment, err := d.GetAttachmentByUrl(ctx, fileUrl)
+	return attachment, err
+}

@@ -125,5 +125,6 @@ func autoMigrate(db *gorm.DB) error {
 		&model.ChapterScore{},
 		&model.Problem{},
 		&model.WrongProblem{},
+		&model.ShareResource{},
 	)
 }

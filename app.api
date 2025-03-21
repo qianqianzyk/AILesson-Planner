@@ -926,7 +926,6 @@ type (
 		UpdateInformation map[string]interface{} `json:"update_information"`
 		NodeType          string                 `json:"node_type"`
 		ElementID         string                 `json:"element_id"`
-		AuthorizationID   string                 `json:"authorization_id"`
 	}
 	UpdateGraphNodeResp {
 		Base
@@ -1004,6 +1003,87 @@ type (
 		Filename  string `form:"filename"`
 	}
 	DeleteGraphNodeRelationShipResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	UploadShareFileResp {
+		Base
+		Data FileUrl `json:"data"`
+	}
+)
+
+type (
+	DeleteShareFileReq {
+		FileUrl string `form:"file_url"`
+	}
+	DeleteShareFileResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	CreateShareResourceReq {
+		ResourceType int    `json:"resource_type"`
+		Title        string `json:"title"`
+		Content      string `json:"content"`
+	}
+	CreateShareResourceResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	DeleteShareResourceReq {
+		ResourceID int `form:"resource_id"`
+	}
+	DeleteShareResourceResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	ShareResource {
+		ID        int    `json:"id"`
+		Username  string `json:"username"`
+		Avatar    string `json:"avatar"`
+		Title     string `json:"title"`
+		Content   string `json:"content"`
+		CreatedAt string `json:"created_at"`
+		UpdatedAt string `json:"updated_at"`
+	}
+	GetShareResourceListReq {
+		ResourceType int `form:"resource_type"`
+	}
+	GetShareResourceListResp {
+		Base
+		Data []ShareResource `json:"data"`
+	}
+)
+
+type (
+	SearchShareResourceReq {
+		ResourceType int    `form:"resource_type"`
+		Keyword      string `form:"keyword"`
+	}
+	SearchShareResourceResp {
+		Base
+		Data []ShareResource `json:"data"`
+	}
+)
+
+type (
+	StoreShareResourceReq {
+		FileUrl  string `json:"file_url"`
+		ParentID int    `json:"parent_id"`
+		Path     string `json:"path"`
+	}
+	StoreShareResourceResp {
 		Base
 		Data string `json:"data"`
 	}
@@ -1302,5 +1382,33 @@ service app {
 
 	@handler DeleteGraphNodeRelationShip
 	delete /relationship (DeleteGraphNodeRelationShipReq) returns (DeleteGraphNodeRelationShipResp)
+}
+
+@server (
+	group:  share
+	prefix: /api/share
+	jwt:    Auth
+)
+service app {
+	@handler CreateShareResource
+	post /resource (CreateShareResourceReq) returns (CreateShareResourceResp)
+
+	@handler DeleteShareResource
+	delete /resource (DeleteShareResourceReq) returns (DeleteShareResourceResp)
+
+	@handler GetShareResourceList
+	get /resource (GetShareResourceListReq) returns (GetShareResourceListResp)
+
+	@handler SearchShareResource
+	get /search_resource (SearchShareResourceReq) returns (SearchShareResourceResp)
+
+	@handler UploadShareFile
+	post /share_file (Empty) returns (UploadShareFileResp)
+
+	@handler DeleteShareFile
+	delete /share_file (DeleteShareFileReq) returns (DeleteShareFileResp)
+
+	@handler StoreShareResource
+	post /share_resource (StoreShareResourceReq) returns (StoreShareResourceResp)
 }
 

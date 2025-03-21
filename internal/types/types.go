@@ -185,6 +185,17 @@ type CreateGraphNodeResp struct {
 	Data NodeElementID `json:"data"`
 }
 
+type CreateShareResourceReq struct {
+	ResourceType int    `json:"resource_type"`
+	Title        string `json:"title"`
+	Content      string `json:"content"`
+}
+
+type CreateShareResourceResp struct {
+	Base
+	Data string `json:"data"`
+}
+
 type CreateStudentInfoReq struct {
 	CourseID  int    `json:"course_id"`
 	StudentID string `json:"student_id"`
@@ -270,6 +281,24 @@ type DeleteGraphNodeReq struct {
 }
 
 type DeleteGraphNodeResp struct {
+	Base
+	Data string `json:"data"`
+}
+
+type DeleteShareFileReq struct {
+	FileUrl string `form:"file_url"`
+}
+
+type DeleteShareFileResp struct {
+	Base
+	Data string `json:"data"`
+}
+
+type DeleteShareResourceReq struct {
+	ResourceID int `form:"resource_id"`
+}
+
+type DeleteShareResourceResp struct {
 	Base
 	Data string `json:"data"`
 }
@@ -526,6 +555,15 @@ type GetShareLinkResp struct {
 	Data []DiskDirectory `json:"data"`
 }
 
+type GetShareResourceListReq struct {
+	ResourceType int `form:"resource_type"`
+}
+
+type GetShareResourceListResp struct {
+	Base
+	Data []ShareResource `json:"data"`
+}
+
 type GetStudentChapterScoreReq struct {
 	StudentID string `form:"student_id"`
 	CourseID  int    `form:"course_id"`
@@ -744,6 +782,16 @@ type SearchMessagesResp struct {
 	Data []Chat `json:"data"`
 }
 
+type SearchShareResourceReq struct {
+	ResourceType int    `form:"resource_type"`
+	Keyword      string `form:"keyword"`
+}
+
+type SearchShareResourceResp struct {
+	Base
+	Data []ShareResource `json:"data"`
+}
+
 type SendCodeReq struct {
 	Email string `json:"email"`
 }
@@ -764,6 +812,16 @@ type ShareLinkGenResp struct {
 	Data Link `json:"data"`
 }
 
+type ShareResource struct {
+	ID        int    `json:"id"`
+	Username  string `json:"username"`
+	Avatar    string `json:"avatar"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+}
+
 type StoreResourceReq struct {
 	Ids      []int  `json:"ids"`
 	ParentID int    `json:"parent_id"`
@@ -771,6 +829,17 @@ type StoreResourceReq struct {
 }
 
 type StoreResourceResp struct {
+	Base
+	Data string `json:"data"`
+}
+
+type StoreShareResourceReq struct {
+	FileUrl  string `json:"file_url"`
+	ParentID int    `json:"parent_id"`
+	Path     string `json:"path"`
+}
+
+type StoreShareResourceResp struct {
 	Base
 	Data string `json:"data"`
 }
@@ -887,7 +956,6 @@ type UpdateGraphNodeReq struct {
 	UpdateInformation map[string]interface{} `json:"update_information"`
 	NodeType          string                 `json:"node_type"`
 	ElementID         string                 `json:"element_id"`
-	AuthorizationID   string                 `json:"authorization_id"`
 }
 
 type UpdateGraphNodeResp struct {
@@ -958,6 +1026,11 @@ type UploadFileReq struct {
 }
 
 type UploadFileResp struct {
+	Base
+	Data FileUrl `json:"data"`
+}
+
+type UploadShareFileResp struct {
 	Base
 	Data FileUrl `json:"data"`
 }

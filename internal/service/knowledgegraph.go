@@ -7,8 +7,8 @@ func FetchGraphDataByFileName(fileName, authorizationID string) (interface{}, er
 	return graph, err
 }
 
-func UpdateNodeByElementID(nodeType, elementID, authorizationID string, updates map[string]interface{}) error {
-	err := d.UpdateNodeByElementID(ctx, nodeType, elementID, authorizationID, updates)
+func UpdateNodeByElementID(nodeType, elementID string, updates map[string]interface{}) error {
+	err := d.UpdateNodeByElementID(ctx, nodeType, elementID, updates)
 	return err
 }
 

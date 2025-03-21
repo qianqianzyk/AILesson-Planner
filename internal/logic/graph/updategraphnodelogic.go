@@ -3,11 +3,9 @@ package graph
 import (
 	"context"
 	"github.com/qianqianzyk/AILesson-Planner/internal/service"
-	"github.com/qianqianzyk/AILesson-Planner/internal/utils"
-	"strconv"
-
 	"github.com/qianqianzyk/AILesson-Planner/internal/svc"
 	"github.com/qianqianzyk/AILesson-Planner/internal/types"
+	"github.com/qianqianzyk/AILesson-Planner/internal/utils"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,15 +28,6 @@ func (l *UpdateGraphNodeLogic) UpdateGraphNode(req *types.UpdateGraphNodeReq) (r
 	updateInformation := req.UpdateInformation
 	nodeType := req.NodeType
 	elementID := req.ElementID
-	authorizationID := req.AuthorizationID
-
-	userID, err := service.GetUserID(l.ctx)
-	if err != nil {
-		return nil, utils.AbortWithException(utils.ErrUserID, err)
-	}
-	if authorizationID == "" {
-		authorizationID = strconv.FormatInt(userID, 10)
-	}
 
 	if nodeType == "Chunk" {
 		text, exists := updateInformation["text"]
@@ -51,7 +40,7 @@ func (l *UpdateGraphNodeLogic) UpdateGraphNode(req *types.UpdateGraphNodeReq) (r
 		}
 	}
 
-	err = service.UpdateNodeByElementID(nodeType, elementID, authorizationID, updateInformation)
+	err = service.UpdateNodeByElementID(nodeType, elementID, updateInformation)
 	if err != nil {
 		return nil, utils.AbortWithException(utils.ErrUpdateGraphNode, err)
 	}

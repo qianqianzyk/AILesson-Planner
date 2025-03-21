@@ -24,3 +24,18 @@ func (d *Dao) UpdateAttachment(ctx context.Context, attachment *model.Attachment
 	result := d.orm.WithContext(ctx).Model(&model.Attachment{}).Save(attachment)
 	return result.Error
 }
+
+func (d *Dao) DeleteAttachmentByUrl(ctx context.Context, userID int, fileUrl string) error {
+	result := d.orm.WithContext(ctx).
+		Where("user_id = ? AND file_url = ?", userID, fileUrl).
+		Delete(&model.Attachment{})
+	return result.Error
+}
+
+func (d *Dao) GetAttachmentByUrl(ctx context.Context, fileUrl string) (*model.Attachment, error) {
+	var attachment *model.Attachment
+	result := d.orm.WithContext(ctx).Model(&model.Attachment{}).
+		Where("file_url = ?", fileUrl).
+		First(&attachment)
+	return attachment, result.Error
+}
