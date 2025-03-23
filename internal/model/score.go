@@ -66,3 +66,11 @@ type StudentScores struct {
 	AcademicYear string  `json:"academic_year"`
 	AcademicTerm int     `json:"academic_term"`
 }
+
+type StudentTranscripts struct {
+	StudentID string  `json:"student_id"`
+	Name      string  `json:"name"`
+	Class     string  `json:"class"`
+	Ranking   int     `json:"ranking"`
+	AvgGPA    float64 `json:"avg_gpa"`
+}

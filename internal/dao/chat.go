@@ -9,6 +9,7 @@ import (
 	"github.com/qianqianzyk/AILesson-Planner/internal/model"
 	"gorm.io/gorm"
 	"strings"
+	"time"
 )
 
 func (d *Dao) CreateTopic(ctx context.Context, cov *model.ConversationSession) error {
@@ -72,6 +73,13 @@ func (d *Dao) StoreMessageInDB(messages []model.ConversationMessage) error {
 		return err
 	}
 	return tx.Commit().Error
+}
+
+func (d *Dao) UpdateSessionUpdatedAt(sessionID int) error {
+	return d.orm.Model(&model.ConversationSession{}).
+		Where("id = ?", sessionID).
+		Update("updated_at", time.Now()).
+		Error
 }
 
 func (d *Dao) StoreMessageToRedis(ctx context.Context, key string, value string) error {
@@ -190,6 +198,91 @@ func (d *Dao) SyncMessageIndexToElasticsearch(ctx context.Context, messages []mo
 	}
 
 	return nil
+}
+
+func (d *Dao) SearchConversation(ctx context.Context, query string, userID int) ([]model.ResponseConversationSession, error) {
+	var sessions []model.ConversationSession
+	var responseSessions []model.ResponseConversationSession
+
+	var sessionIDs []int
+	err := d.orm.WithContext(ctx).
+		Model(&model.ConversationSession{}).
+		Where("user_id = ? AND title LIKE ?", userID, "%"+query+"%").
+		Pluck("id", &sessionIDs).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var messageSessionIDs []int
+	err = d.orm.WithContext(ctx).
+		Model(&model.ConversationMessage{}).
+		Where("user_id = ? AND message LIKE ?", userID, "%"+query+"%").
+		Pluck("session_id", &messageSessionIDs).Error
+	if err != nil {
+		return nil, err
+	}
+
+	sessionIDFromTitle := make(map[int]struct{})
+	sessionIDFromMessage := make(map[int]struct{})
+	finalSessionIDs := make(map[int]struct{})
+	for _, id := range messageSessionIDs {
+		sessionIDFromMessage[id] = struct{}{}
+		finalSessionIDs[id] = struct{}{}
+	}
+	for _, id := range sessionIDs {
+		if _, exists := sessionIDFromMessage[id]; !exists {
+			sessionIDFromTitle[id] = struct{}{}
+			finalSessionIDs[id] = struct{}{}
+		}
+	}
+	var uniqueSessionIDs []int
+	for id := range finalSessionIDs {
+		uniqueSessionIDs = append(uniqueSessionIDs, id)
+	}
+
+	if len(uniqueSessionIDs) > 0 {
+		err = d.orm.WithContext(ctx).
+			Model(&model.ConversationSession{}).
+			Where("id IN ?", uniqueSessionIDs).
+			Order("updated_at DESC").
+			Find(&sessions).Error
+		if err != nil {
+			return nil, err
+		}
+
+		for _, session := range sessions {
+			var messages []model.ConversationMessage
+
+			if _, found := sessionIDFromMessage[int(session.ID)]; found {
+				err = d.orm.WithContext(ctx).
+					Where("session_id = ? AND message LIKE ?", session.ID, "%"+query+"%").
+					Order("created_at ASC").
+					Find(&messages).Error
+			} else if _, found := sessionIDFromTitle[int(session.ID)]; found {
+				err = d.orm.WithContext(ctx).
+					Where("session_id = ?", session.ID).
+					Order("created_at ASC").
+					Limit(2).
+					Find(&messages).Error
+			}
+
+			if err != nil {
+				return nil, err
+			}
+
+			responseSessions = append(responseSessions, model.ResponseConversationSession{
+				ID:                  int(session.ID),
+				UserID:              session.UserID,
+				Title:               session.Title,
+				CreatedAt:           session.CreatedAt,
+				UpdatedAt:           session.UpdatedAt,
+				DeletedAt:           session.DeletedAt,
+				ConversationMessage: messages,
+			})
+		}
+	}
+
+	return responseSessions, nil
 }
 
 func (d *Dao) SearchConversations(ctx context.Context, query string, userID int) ([]model.ResponseConversationSession, error) {
@@ -319,5 +412,17 @@ func (d *Dao) SearchFilesByFilename(ctx context.Context, query string, userID in
 		}
 	}
 
+	return fileIDs, nil
+}
+
+func (d *Dao) SearchFileByFilename(ctx context.Context, query string, userID int) ([]int, error) {
+	var fileIDs []int
+	err := d.orm.WithContext(ctx).
+		Model(&model.File{}).
+		Where("user_id = ? AND name LIKE ?", userID, "%"+query+"%").
+		Pluck("id", &fileIDs).Error
+	if err != nil {
+		return nil, err
+	}
 	return fileIDs, nil
 }

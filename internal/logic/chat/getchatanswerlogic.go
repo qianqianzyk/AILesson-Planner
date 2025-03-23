@@ -49,12 +49,13 @@ func (l *GetChatAnswerLogic) GetChatAnswer(req *types.GetChatAnswerReq) (resp *t
 		return nil, utils.AbortWithException(utils.ErrAuthUser, err)
 	}
 
-	answer, err := service.GetAnswerTextByTongyi(
-		l.svcCtx.Config.Tongyi.Endpoint,
-		l.svcCtx.Config.Tongyi.APIKey,
-		message,
-		sessionID,
-	)
+	//answer, err := service.GetAnswerTextByMoonshot(
+	//	l.svcCtx.Config.Tongyi.Endpoint,
+	//	l.svcCtx.Config.Tongyi.APIKey,
+	//	message,
+	//	sessionID,
+	//)
+	answer, err := service.GetAnswerTextByMoonshot(l.svcCtx.Config.AI.ChatEndpoint, message)
 	if err != nil {
 		return nil, utils.AbortWithException(utils.ErrGenAnswer, err)
 	}
@@ -77,15 +78,15 @@ func (l *GetChatAnswerLogic) GetChatAnswer(req *types.GetChatAnswerReq) (resp *t
 			UpdatedAt: time.Now(),
 		},
 	}
-	err = service.SaveMessageToMySQL(messages)
+	err = service.SaveMessageToMySQL(sessionID, messages)
 	if err != nil {
 		return nil, utils.AbortWithException(utils.ErrSyncToMySQL, err)
 	}
 
-	err = service.SyncMessageIndexToES(messages)
-	if err != nil {
-		return nil, utils.AbortWithException(utils.ErrSyncIndex, err)
-	}
+	//err = service.SyncMessageIndexToES(messages)
+	//if err != nil {
+	//	return nil, utils.AbortWithException(utils.ErrSyncIndex, err)
+	//}
 
 	return &types.GetChatAnswerResp{
 		Base: types.Base{

@@ -31,6 +31,7 @@ func (l *CreateShareResourceLogic) CreateShareResource(req *types.CreateShareRes
 	resourceType := req.ResourceType
 	title := req.Title
 	content := req.Content
+	coverImg := req.CoverImg
 
 	userID, err := service.GetUserID(l.ctx)
 	if err != nil {
@@ -40,6 +41,7 @@ func (l *CreateShareResourceLogic) CreateShareResource(req *types.CreateShareRes
 	post := model.ShareResource{
 		UserID:       int(userID),
 		ResourceType: resourceType,
+		CoverImg:     coverImg,
 		Title:        title,
 		Content:      content,
 		CreatedAt:    time.Now(),

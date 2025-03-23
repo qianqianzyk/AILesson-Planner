@@ -617,6 +617,30 @@ func (d *Dao) GetStudentGPAAndRank(ctx context.Context, studentID string) ([]mod
 	return gpaResults, nil
 }
 
+func (d *Dao) GetStudentTranscripts(ctx context.Context, academicYear, name, studentID string, academicTerm int) ([]model.StudentTranscripts, error) {
+	var transcripts []model.StudentTranscripts
+
+	err := d.orm.WithContext(ctx).
+		Table("students AS s").
+		Select("s.student_id, s.name, s.class, COALESCE(AVG(sc.grade_point), 0) AS avg_gpa").
+		Joins("LEFT JOIN scores AS sc ON s.student_id = sc.student_id").
+		Joins("LEFT JOIN courses AS c ON sc.course_id = c.id").
+		Where("c.academic_year = ? AND c.academic_term = ?", academicYear, academicTerm).
+		Where("s.name LIKE ? AND s.student_id LIKE ?", "%"+name+"%", "%"+studentID+"%").
+		Group("s.student_id, s.name, s.class").
+		Order("avg_gpa DESC").
+		Scan(&transcripts).Error
+	if err != nil {
+		return nil, fmt.Errorf("查询成绩单失败: %w", err)
+	}
+
+	for i := range transcripts {
+		transcripts[i].Ranking = i + 1
+	}
+
+	return transcripts, nil
+}
+
 func (d *Dao) GetStudentCourses(ctx context.Context, studentID string) ([]model.StudentScores, error) {
 	var studentScores []model.StudentScores
 	err := d.orm.WithContext(ctx).

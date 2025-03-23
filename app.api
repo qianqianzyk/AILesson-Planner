@@ -736,6 +736,48 @@ type (
 )
 
 type (
+	StudentTranscripts {
+		StudentID string  `json:"student_id"`
+		Name      string  `json:"name"`
+		Class     string  `json:"class"`
+		Ranking   int     `json:"ranking"`
+		AvgGPA    float64 `json:"avg_gpa"`
+	}
+	GetStudentTranscriptsReq {
+		AcademicYear string `form:"academic_year"`
+		AcademicTerm int    `form:"academic_term"`
+		Name         string `form:"name"`
+		StudentID    string `form:"student_id"`
+	}
+	GetStudentTranscriptsResp {
+		Base
+		Data []StudentTranscripts `json:"data"`
+	}
+)
+
+type (
+	GetStudentTranscriptReq {
+		StudentID    string `form:"student_id"`
+		AcademicYear string `form:"academic_year"`
+		AcademicTerm int    `form:"academic_term"`
+	}
+	GetStudentTranscriptResp {
+		Base
+		Data FileUrl `json:"data"`
+	}
+)
+
+type (
+	SendtTranscriptsReq {
+		StudentID string `json:"student_id"`
+	}
+	SendtTranscriptsResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
 	ClassList {
 		ClassList []string `json:"class_list"`
 	}
@@ -1030,6 +1072,7 @@ type (
 		ResourceType int    `json:"resource_type"`
 		Title        string `json:"title"`
 		Content      string `json:"content"`
+		CoverImg     string `json:"cover_img"`
 	}
 	CreateShareResourceResp {
 		Base
@@ -1052,6 +1095,7 @@ type (
 		ID        int    `json:"id"`
 		Username  string `json:"username"`
 		Avatar    string `json:"avatar"`
+		CoverImg  string `json:"cover_img"`
 		Title     string `json:"title"`
 		Content   string `json:"content"`
 		CreatedAt string `json:"created_at"`
@@ -1086,6 +1130,90 @@ type (
 	StoreShareResourceResp {
 		Base
 		Data string `json:"data"`
+	}
+)
+
+type (
+	GenerateLessonPlanReq {
+		Subject      string `json:"subject"`
+		TextBookName string `json:"textbook_name"`
+		TopicHours   string `json:"total_hours"`
+		TopicName    string `json:"topic_name"`
+		TemplateFile string `json:"template_file"`
+		ResourceFile string `json:"resource_file"`
+		TextBookImg  string `json:"textbook_img"`
+		description  string `json:"description"`
+	}
+	GenerateLessonPlanResp {
+		Base
+		Data ChatAnswer `json:"data"`
+	}
+)
+
+type (
+	UploadTPlanFileResp {
+		Base
+		Data FileUrl `json:"data"`
+	}
+)
+
+type (
+	UpdateLessonPlanReq {
+		ID           int    `json:"id"`
+		Subject      string `json:"subject"`
+		TextBookName string `json:"textbook_name"`
+		TopicHours   string `json:"total_hours"`
+		TopicName    string `json:"topic_name"`
+		TemplateFile string `json:"template_file"`
+		ResourceFile string `json:"resource_file"`
+		TextBookImg  string `json:"textbook_img"`
+		description  string `json:"description"`
+		TPlanContent string `json:"tplan_content"`
+		TPlanUrl     string `json:"tplan_url"`
+	}
+	UpdateLessonPlanResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	LessonPlan {
+		ID           int      `json:"id"`
+		Subject      string   `json:"subject"`
+		TextBookName string   `json:"textbook_name"`
+		TopicHours   string   `json:"total_hours"`
+		TopicName    string   `json:"topic_name"`
+		TemplateFile string   `json:"template_file"`
+		ResourceFile []string `json:"resource_file"`
+		TextBookImg  []string `json:"textbook_img"`
+		description  string   `json:"description"`
+		TPlanContent string   `json:"tplan_content"`
+		TPlanUrl     string   `json:"tplan_url"`
+	}
+	GetLessonPlanListResp {
+		Base
+		Data []LessonPlan `json:"data"`
+	}
+)
+
+type (
+	DeleteLessonPlanReq {
+		ID int `form:"id"`
+	}
+	DeleteLessonPlanResp {
+		Base
+		Data string `json:"data"`
+	}
+)
+
+type (
+	ExportLessonPlanReq {
+		ID int `json:"id"`
+	}
+	ExportLessonPlanResp {
+		Base
+		Data FileUrl `json:"data"`
 	}
 )
 
@@ -1307,6 +1435,15 @@ service app {
 
 	@handler GetCountNumber
 	get /number (GetCountPerformanceNumberReq) returns (GetCountPerformanceNumberResp)
+
+	@handler GetStudentTranscripts
+	get /scores (GetStudentTranscriptsReq) returns (GetStudentTranscriptsResp)
+
+	@handler GetStudentTranscript
+	get /transcripts (GetStudentTranscriptReq) returns (GetStudentTranscriptResp)
+
+	@handler SendTranscripts
+	post /transcripts (SendtTranscriptsReq) returns (SendtTranscriptsResp)
 }
 
 @server (
@@ -1410,5 +1547,30 @@ service app {
 
 	@handler StoreShareResource
 	post /share_resource (StoreShareResourceReq) returns (StoreShareResourceResp)
+}
+
+@server (
+	group:  chat
+	prefix: /api/lesson
+	jwt:    Auth
+)
+service app {
+	@handler GenerateLessonPlan
+	post /tplan (GenerateLessonPlanReq) returns (GenerateLessonPlanResp)
+
+	@handler UploadTPlanFile
+	post /upload_file (Empty) returns (UploadTPlanFileResp)
+
+	@handler UpdateLessonPlan
+	put /tplan (UpdateLessonPlanReq) returns (UpdateLessonPlanResp)
+
+	@handler GetLessonPlanList
+	get /tplan (Empty) returns (GetLessonPlanListResp)
+
+	@handler DeleteLessonPlan
+	delete /tplan (DeleteLessonPlanReq) returns (DeleteLessonPlanResp)
+
+	@handler ExportLessonPlan
+	post /export_tplan (ExportLessonPlanReq) returns (ExportLessonPlanResp)
 }
 

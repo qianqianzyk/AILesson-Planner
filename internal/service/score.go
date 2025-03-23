@@ -150,6 +150,11 @@ func GetStudentGPAAndRank(studentID string) ([]model.TermGPA, error) {
 	return termGPAs, err
 }
 
+func GetStudentTranscripts(academicYear, name, studentID string, academicTerm int) ([]model.StudentTranscripts, error) {
+	transcripts, err := d.GetStudentTranscripts(ctx, academicYear, name, studentID, academicTerm)
+	return transcripts, err
+}
+
 func GetStudentCourses(studentID string) ([]model.StudentScores, error) {
 	studentScores, err := d.GetStudentCourses(ctx, studentID)
 	return studentScores, err

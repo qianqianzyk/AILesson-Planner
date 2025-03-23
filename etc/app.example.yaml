@@ -66,3 +66,7 @@ Neo4j:
   Username: neo4j
   Password:
   AuraInstanceID:
+
+AI:
+  ChatEndpoint: http://127.0.0.1:5003/
+  TPlanEndpoint: http://127.0.0.1:5002/

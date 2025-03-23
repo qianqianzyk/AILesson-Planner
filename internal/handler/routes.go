@@ -84,6 +84,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodPost,
+				Path:    "/export_tplan",
+				Handler: chat.ExportLessonPlanHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/tplan",
+				Handler: chat.GenerateLessonPlanHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPut,
+				Path:    "/tplan",
+				Handler: chat.UpdateLessonPlanHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/tplan",
+				Handler: chat.GetLessonPlanListHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/tplan",
+				Handler: chat.DeleteLessonPlanHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/upload_file",
+				Handler: chat.UploadTPlanFileHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/api/lesson"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
 				Method:  http.MethodGet,
 				Path:    "/allList",
 				Handler: class.GetAllClassListHandler(serverCtx),
@@ -375,8 +412,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
+				Path:    "/scores",
+				Handler: score.GetStudentTranscriptsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/student",
 				Handler: score.GetStudentScoreHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/transcripts",
+				Handler: score.GetStudentTranscriptHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/transcripts",
+				Handler: score.SendTranscriptsHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPut,

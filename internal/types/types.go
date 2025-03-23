@@ -189,6 +189,7 @@ type CreateShareResourceReq struct {
 	ResourceType int    `json:"resource_type"`
 	Title        string `json:"title"`
 	Content      string `json:"content"`
+	CoverImg     string `json:"cover_img"`
 }
 
 type CreateShareResourceResp struct {
@@ -285,6 +286,15 @@ type DeleteGraphNodeResp struct {
 	Data string `json:"data"`
 }
 
+type DeleteLessonPlanReq struct {
+	ID int `form:"id"`
+}
+
+type DeleteLessonPlanResp struct {
+	Base
+	Data string `json:"data"`
+}
+
 type DeleteShareFileReq struct {
 	FileUrl string `form:"file_url"`
 }
@@ -341,6 +351,15 @@ type DiskDirectoryList struct {
 type Empty struct {
 }
 
+type ExportLessonPlanReq struct {
+	ID int `json:"id"`
+}
+
+type ExportLessonPlanResp struct {
+	Base
+	Data FileUrl `json:"data"`
+}
+
 type ExportScoresReq struct {
 	CourseID int `form:"course_id"`
 }
@@ -382,6 +401,22 @@ type FindPasswordReq struct {
 type FindPasswordResp struct {
 	Base
 	Data string `json:"data"`
+}
+
+type GenerateLessonPlanReq struct {
+	Subject      string `json:"subject"`
+	TextBookName string `json:"textbook_name"`
+	TopicHours   string `json:"total_hours"`
+	TopicName    string `json:"topic_name"`
+	TemplateFile string `json:"template_file"`
+	ResourceFile string `json:"resource_file"`
+	TextBookImg  string `json:"textbook_img"`
+	Description  string `json:"description"`
+}
+
+type GenerateLessonPlanResp struct {
+	Base
+	Data ChatAnswer `json:"data"`
 }
 
 type GetChatAnswerReq struct {
@@ -504,6 +539,11 @@ type GetFilesByTypeResp struct {
 	Data DiskDirectoryList `json:"data"`
 }
 
+type GetLessonPlanListResp struct {
+	Base
+	Data []LessonPlan `json:"data"`
+}
+
 type GetMaterialGraphListReq struct {
 	AuthorizationID string `form:"authorization_id"`
 	GraphType       int    `form:"graph_type"`
@@ -621,6 +661,29 @@ type GetStudentTermGPAResp struct {
 	Data []TermGPA `json:"data"`
 }
 
+type GetStudentTranscriptReq struct {
+	StudentID    string `form:"student_id"`
+	AcademicYear string `form:"academic_year"`
+	AcademicTerm int    `form:"academic_term"`
+}
+
+type GetStudentTranscriptResp struct {
+	Base
+	Data FileUrl `json:"data"`
+}
+
+type GetStudentTranscriptsReq struct {
+	AcademicYear string `form:"academic_year"`
+	AcademicTerm int    `form:"academic_term"`
+	Name         string `form:"name"`
+	StudentID    string `form:"student_id"`
+}
+
+type GetStudentTranscriptsResp struct {
+	Base
+	Data []StudentTranscripts `json:"data"`
+}
+
 type GetUploadCertReq struct {
 	FileName    string `form:"file_name"`
 	MD5         string `form:"md5"`
@@ -647,6 +710,20 @@ type ImportScoresReq struct {
 type ImportScoresResp struct {
 	Base
 	Data string `json:"data"`
+}
+
+type LessonPlan struct {
+	ID           int      `json:"id"`
+	Subject      string   `json:"subject"`
+	TextBookName string   `json:"textbook_name"`
+	TopicHours   string   `json:"total_hours"`
+	TopicName    string   `json:"topic_name"`
+	TemplateFile string   `json:"template_file"`
+	ResourceFile []string `json:"resource_file"`
+	TextBookImg  []string `json:"textbook_img"`
+	Description  string   `json:"description"`
+	TPlanContent string   `json:"tplan_content"`
+	TPlanUrl     string   `json:"tplan_url"`
 }
 
 type Link struct {
@@ -801,6 +878,15 @@ type SendCodeResp struct {
 	Data string `json:"data"`
 }
 
+type SendtTranscriptsReq struct {
+	StudentID string `json:"student_id"`
+}
+
+type SendtTranscriptsResp struct {
+	Base
+	Data string `json:"data"`
+}
+
 type ShareLinkGenReq struct {
 	Ids      []int  `json:"ids"`
 	Validity int    `json:"validity"`
@@ -816,6 +902,7 @@ type ShareResource struct {
 	ID        int    `json:"id"`
 	Username  string `json:"username"`
 	Avatar    string `json:"avatar"`
+	CoverImg  string `json:"cover_img"`
 	Title     string `json:"title"`
 	Content   string `json:"content"`
 	CreatedAt string `json:"created_at"`
@@ -888,6 +975,14 @@ type StudentScores struct {
 	GradePoint   float64 `json:"grade_point"`
 	AcademicYear string  `json:"academic_year"`
 	AcademicTerm int     `json:"academic_term"`
+}
+
+type StudentTranscripts struct {
+	StudentID string  `json:"student_id"`
+	Name      string  `json:"name"`
+	Class     string  `json:"class"`
+	Ranking   int     `json:"ranking"`
+	AvgGPA    float64 `json:"avg_gpa"`
 }
 
 type SyncIndexByHandReq struct {
@@ -963,6 +1058,25 @@ type UpdateGraphNodeResp struct {
 	Data string `json:"data"`
 }
 
+type UpdateLessonPlanReq struct {
+	ID           int    `json:"id"`
+	Subject      string `json:"subject"`
+	TextBookName string `json:"textbook_name"`
+	TopicHours   string `json:"total_hours"`
+	TopicName    string `json:"topic_name"`
+	TemplateFile string `json:"template_file"`
+	ResourceFile string `json:"resource_file"`
+	TextBookImg  string `json:"textbook_img"`
+	Description  string `json:"description"`
+	TPlanContent string `json:"tplan_content"`
+	TPlanUrl     string `json:"tplan_url"`
+}
+
+type UpdateLessonPlanResp struct {
+	Base
+	Data string `json:"data"`
+}
+
 type UpdatePasswordReq struct {
 	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
@@ -1031,6 +1145,11 @@ type UploadFileResp struct {
 }
 
 type UploadShareFileResp struct {
+	Base
+	Data FileUrl `json:"data"`
+}
+
+type UploadTPlanFileResp struct {
 	Base
 	Data FileUrl `json:"data"`
 }

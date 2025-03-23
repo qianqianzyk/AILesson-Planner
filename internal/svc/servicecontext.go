@@ -126,5 +126,6 @@ func autoMigrate(db *gorm.DB) error {
 		&model.Problem{},
 		&model.WrongProblem{},
 		&model.ShareResource{},
+		&model.TPlan{},
 	)
 }

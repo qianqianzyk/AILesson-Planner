@@ -7,4 +7,5 @@ type Student struct {
 	College   string `json:"college"`
 	Class     string `json:"class"`
 	Major     string `json:"major"`
+	Email     string `json:"email"`
 }

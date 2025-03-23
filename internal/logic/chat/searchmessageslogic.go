@@ -32,7 +32,7 @@ func (l *SearchMessagesLogic) SearchMessages(req *types.SearchMessagesReq) (resp
 		return nil, utils.AbortWithException(utils.ErrUserID, err)
 	}
 
-	responseConversationSession, err := service.SearchMessages(key, int(userID))
+	responseConversationSession, err := service.SearchMessage(key, int(userID))
 	if err != nil {
 		return nil, utils.AbortWithException(utils.ErrSearch, err)
 	}

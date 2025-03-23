@@ -9,6 +9,7 @@ import (
 	"github.com/qianqianzyk/AILesson-Planner/internal/service"
 	"github.com/qianqianzyk/AILesson-Planner/internal/svc"
 	"github.com/qianqianzyk/AILesson-Planner/internal/utils"
+	"github.com/unidoc/unioffice/v2/common/license"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/stat"
 	"github.com/zeromicro/go-zero/rest"
@@ -39,6 +40,11 @@ func main() {
 
 	service.ServiceInit(ctx.MySQLClient, ctx.RedisClient, ctx.ESClient, ctx.MinioClient, ctx.RestyClient, ctx.Neo4jDriver)
 	service.ConfigInit(&c)
+
+	err := license.SetMeteredKey(ctx.Config.Unidoc.APIKey)
+	if err != nil {
+		log.Fatalf("License load failed: %v", err)
+	}
 
 	service.StartScheduledCleanup()
 

@@ -6,8 +6,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/qianqianzyk/AILesson-Planner/internal/model"
+	"io"
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 const (
@@ -92,12 +95,12 @@ func SaveMessageToRedis(userID int64, message model.ConversationMessage) error {
 	return nil
 }
 
-func SaveMessageToMySQL(messages []model.ConversationMessage) error {
+func SaveMessageToMySQL(sessionID int, messages []model.ConversationMessage) error {
 	err := d.StoreMessageInDB(messages)
 	if err != nil {
 		return err
 	}
-	return nil
+	return d.UpdateSessionUpdatedAt(sessionID)
 }
 
 func GetAnswerTextByTongyi(endpoint string, apiKey string, question string, sessionID int) (string, error) {
@@ -159,6 +162,41 @@ func GetAnswerTextByTongyi(endpoint string, apiKey string, question string, sess
 	return "", err
 }
 
+func GetAnswerTextByMoonshot(chatEndpoint, question string) (string, error) {
+	url := chatEndpoint + "api/chat"
+	requestData := map[string]string{
+		"message": question,
+	}
+
+	jsonData, err := json.Marshal(requestData)
+	if err != nil {
+		return "", err
+	}
+
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	var responseData map[string]string
+	err = json.Unmarshal(body, &responseData)
+	if err != nil {
+		return "", err
+	}
+
+	if message, ok := responseData["message"]; ok {
+		return message, nil
+	} else {
+		return "", fmt.Errorf("message not found in response")
+	}
+}
+
 func SyncMessageIndexToES(messages []model.ConversationMessage) error {
 	err := d.SyncMessageIndexToElasticsearch(ctx, messages)
 	if err != nil {
@@ -167,16 +205,60 @@ func SyncMessageIndexToES(messages []model.ConversationMessage) error {
 	return nil
 }
 
-//func StartCronSync(interval time.Duration) {
-//	ticker := time.NewTicker(interval)
-//	go func() {
-//		for range ticker.C {
-//			if err := d.SyncToElasticsearch(ctx); err != nil {
-//				log.Printf("sync failed: %v", err)
-//			}
-//		}
-//	}()
-//}
+func StartCronSync(indexName string, interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	go func() {
+		for range ticker.C {
+			if err := d.SyncToElasticsearch(ctx, indexName); err != nil {
+				log.Printf("sync failed: %v", err)
+			}
+		}
+	}()
+}
+
+func GenerateLessonPlan(tPlanEndpoint, textbookName, subject, totalHours, topicName, templateFile, resourceFile, textBookImg, description string) (string, error) {
+	apiURL := tPlanEndpoint + "api/lesson/generate"
+
+	payload := map[string]interface{}{
+		"textbook_name": textbookName,
+		"subject":       subject,
+		"total_hours":   totalHours,
+		"topic_name":    topicName,
+		"template_file": templateFile,
+		"resource_file": resourceFile,
+		"textbook_img":  textBookImg,
+		"description":   description,
+	}
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return "", fmt.Errorf("请求数据构造失败: %v", err)
+	}
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		return "", fmt.Errorf("请求创建失败: %v", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("请求失败: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return "", err
+		}
+		return string(body), nil
+	} else {
+		return "", fmt.Errorf("failed to generate lesson plan, status code: %d", resp.StatusCode)
+	}
+}
 
 func convertToMessages(conversationHistory []model.ConversationMessage) []model.Message {
 	var messages []model.Message

@@ -88,6 +88,11 @@ var (
 	ErrCreateExperiencePost        = NewError(200579, logs.LevelInfo, "创建经验帖失败，请重试")
 	ErrDeleteExperiencePost        = NewError(200580, logs.LevelInfo, "删除经验帖失败，请重试")
 	ErrGetExperiencePost           = NewError(200581, logs.LevelInfo, "获取经验贴失败，请重试")
+	ErrGenTPlan                    = NewError(200582, logs.LevelInfo, "生成教案失败，请重试")
+	ErrUpdateTPlan                 = NewError(200583, logs.LevelInfo, "更新教案失败，请重试")
+	ErrGetTPlan                    = NewError(200584, logs.LevelInfo, "获取教案失败，请重试")
+	ErrDeleteTPlan                 = NewError(200585, logs.LevelInfo, "删除教案失败，请重试")
+	ErrExportTPlan                 = NewError(200586, logs.LevelInfo, "导出教案失败，请重试")
 
 	ErrTimeLimited = errors.New("请等待60秒后再尝试发送邮件")
 )

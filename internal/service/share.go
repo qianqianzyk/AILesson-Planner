@@ -8,7 +8,10 @@ func CreateShareResource(post *model.ShareResource) error {
 }
 
 func DeleteShareResource(resourceID, userID int) error {
-	err := d.DeleteShareResource(ctx, resourceID, userID)
+	coverImg, err := d.DeleteShareResource(ctx, resourceID, userID)
+	if coverImg != "" {
+		DeleteObjectByUrlAsync(coverImg)
+	}
 	return err
 }
 

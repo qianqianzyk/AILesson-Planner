@@ -19,11 +19,13 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
-	Aes   AesConfig
-	Email EmailConfig
-	MySQL MySQLConfig
-	Redis RedisConfig
-	Neo4j Neo4jConfig
+	Aes    AesConfig
+	Email  EmailConfig
+	MySQL  MySQLConfig
+	Redis  RedisConfig
+	Neo4j  Neo4jConfig
+	AI     AIConfig
+	Unidoc UnidocConfig
 }
 
 type AesConfig struct {
@@ -86,4 +88,13 @@ type Neo4jConfig struct {
 	Username       string
 	Password       string
 	AuraInstanceID string
+}
+
+type AIConfig struct {
+	ChatEndpoint  string
+	TPlanEndpoint string
+}
+
+type UnidocConfig struct {
+	APIKey string
 }

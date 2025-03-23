@@ -13,6 +13,11 @@ func SearchMessages(query string, userID int) ([]model.ResponseConversationSessi
 }
 
 func SearchFiles(query string, userID int) ([]int, error) {
-	result, err := d.SearchFilesByFilename(ctx, query, userID)
+	result, err := d.SearchFileByFilename(ctx, query, userID)
+	return result, err
+}
+
+func SearchMessage(query string, userID int) ([]model.ResponseConversationSession, error) {
+	result, err := d.SearchConversation(ctx, query, userID)
 	return result, err
 }
